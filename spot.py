@@ -44,31 +44,29 @@ def plot(objects, frequency, name, username, url):
 
     combined = []
 
-    max = 30
-
-    if len(objects) > max:
-        num = max
-    else:
-        num = len(objects) #number of artists used
-    for i in range(num):
+    for i in range(len(objects)):
         combined.append([objects[i], frequency[i]])
+
+    max = 30
     combined.sort(reverse=True, key=takeSecond)
 
     objects = []
     frequency = []
 
-    for combo in combined:
-        if len(combo[0]) > 15:
-            newWord = combo[0][0:13] + "..."
+    if len(combined) < max:
+        max = len(combined)
+    for i in range(max):
+        if len(combined[i][0]) > 15:
+            newWord = combined[i][0] + "..."
             objects.append(newWord)
         else:
-            objects.append(combo[0])
-        frequency.append(combo[1])
-    y_pos = np.arange(num)
-    plt.bar(y_pos, frequency, align='center', alpha=0.5)
-    plt.xticks(y_pos, objects, fontsize='medium', rotation=90)
-    plt.ylabel('Frequency')
-    plt.title('Artists in ' + sp.user(username)['display_name'] + "'s playlist: " + name, fontsize='small')
+            objects.append(combined[i][0])
+        frequency.append(combined[i][1])
+    y_pos = np.arange(max)
+    plt.bar(y_pos, frequency, align='center', alpha=0.5, zorder=1)
+    plt.xticks(y_pos, objects, fontsize='medium', rotation=90, zorder=1)
+    plt.ylabel('Frequency', zorder=1)
+    plt.title('Artists in ' + sp.user(username)['display_name'] + "'s playlist: " + name, fontsize='small', zorder=1)
     plt.tight_layout(pad=4)
 
     response = requests.get(sp.user(username)['images'][0]['url'])
@@ -92,7 +90,7 @@ def plot(objects, frequency, name, username, url):
     newax2.imshow(im2)
     newax2.axis('off')
 
-    plt.savefig('C:/Users/12244/yoonp/independentCS/spotipy/graph.png', dpi=80)
+    plt.savefig('graph.png', dpi=80)
 
     plt.show()
 
